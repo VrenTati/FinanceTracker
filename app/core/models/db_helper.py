@@ -33,9 +33,9 @@ class DatabaseHelper:
             yield session
 
 db_helper = DatabaseHelper(
-    url=settings.db.url,
-    echo = settings.db.echo,
-    echo_pool = settings.db.echo_pool,
-    max_overflow = settings.db.max_overflow,
-    pool_size = settings.db.pool_size,
+    url=str(settings.db.url),
+    echo=settings.db.echo,
+    echo_pool=settings.db.echo_pool,
+    max_overflow=settings.db.max_overflow,
+    pool_size=settings.db.pool_size,
 )
