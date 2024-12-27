@@ -1,6 +1,6 @@
 __all__ = (
     "db_helper",
-    "base"
+    "Base",
 )
 
 from .base import Base
