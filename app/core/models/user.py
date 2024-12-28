@@ -1,4 +1,7 @@
-from fastapi_users.db import SQLAlchemyBaseUserTable, SQLAlchemyUserDatabase
+from fastapi_users_db_sqlalchemy import (
+    SQLAlchemyUserDatabase,
+    SQLAlchemyBaseUserTable,
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Base
