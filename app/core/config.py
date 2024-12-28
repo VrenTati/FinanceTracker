@@ -34,6 +34,7 @@ class DatabaseConfig(BaseModel):
     max_overflow: int = 50
     pool_size: int = 10
 
+
 class AccessToken(BaseModel):
     lifetime_seconds: int = 3600
     reset_password_token_secret: str
