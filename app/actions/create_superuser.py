@@ -20,9 +20,10 @@ default_is_active = True
 default_is_superuser = True
 default_is_verified = True
 
+
 async def create_user(
-        user_manager: UserManager,
-        user_create: UserCreate,
+    user_manager: UserManager,
+    user_create: UserCreate,
 ) -> User:
     user = await user_manager.create(
         user_create=user_create,
@@ -30,12 +31,13 @@ async def create_user(
     )
     return user
 
+
 async def create_superuser(
-        email: str = default_email,
-        password: str = default_password,
-        is_active: bool = default_is_active,
-        is_superuser: bool = default_is_superuser,
-        is_verified: bool = default_is_verified,
+    email: str = default_email,
+    password: str = default_password,
+    is_active: bool = default_is_active,
+    is_superuser: bool = default_is_superuser,
+    is_verified: bool = default_is_verified,
 ):
     user_create = UserCreate(
         email=email,
@@ -51,6 +53,7 @@ async def create_superuser(
                     user_manager=user_manager,
                     user_create=user_create,
                 )
+
 
 if __name__ == "__main__":
     asyncio.run(create_superuser())
