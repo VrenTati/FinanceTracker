@@ -14,6 +14,7 @@ class ApiV1Prefix(BaseModel):
     auth: str = "/auth"
     categories: str = "/categories"
     transactions: str = "/transactions"
+    reports: str = "/reports"
 
 
 class ApiPrefix(BaseModel):
