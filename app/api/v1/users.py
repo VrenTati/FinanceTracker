@@ -5,8 +5,7 @@ from core.config import settings
 from core.schemas.user import UserRead, UserUpdate
 
 router = APIRouter(
-    prefix=settings.api.v1.user,
-    tags=["users"],
+    prefix=settings.api.v1.user
 )
 
 router.include_router(
