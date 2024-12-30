@@ -2,7 +2,7 @@
 name = "financetracker"
 version = "0.1.0"
 description = ""
-authors = ["VrenTati <kateryna.vynokurova.pz.2022@lpnu.ua>"]
+authors = ["VrenTati <vrentati@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
