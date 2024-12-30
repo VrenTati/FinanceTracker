@@ -13,7 +13,9 @@ class CategoryService:
 
     @staticmethod
     async def create_category(db: AsyncSession, category_data: BaseCategoryCreate):
-        existing = await db.execute(select(Category).where(Category.name == category_data.name))
+        existing = await db.execute(
+            select(Category).where(Category.name == category_data.name)
+        )
         if existing.scalar():
             raise HTTPException(status_code=400, detail="Category already exists")
         new_category = Category(**category_data.dict())
@@ -23,7 +25,9 @@ class CategoryService:
         return new_category
 
     @staticmethod
-    async def update_category(db: AsyncSession, category_id: int, category_data: BaseCategoryUpdate):
+    async def update_category(
+        db: AsyncSession, category_id: int, category_data: BaseCategoryUpdate
+    ):
         category = await db.get(Category, category_id)
         if not category:
             raise HTTPException(status_code=404, detail="Category not found")

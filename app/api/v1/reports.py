@@ -8,15 +8,14 @@ from core.schemas.report import ReportFilter
 from core.services.report_service import ReportService
 from .fastapi_users import current_user
 
-router = APIRouter(
-    prefix=settings.api.v1.reports
-)
+router = APIRouter(prefix=settings.api.v1.reports)
+
 
 @router.post("/report/")
 async def get_report(
-        filters: ReportFilter,
-        db: AsyncSession = Depends(db_helper.session_getter),
-        user: User = Depends(current_user),
+    filters: ReportFilter,
+    db: AsyncSession = Depends(db_helper.session_getter),
+    user: User = Depends(current_user),
 ):
     report = await ReportService.get_report(
         db, user.id, filters.start_date, filters.end_date

@@ -8,8 +8,10 @@ class BaseCategory(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class BaseCategoryCreate(BaseModel):
     name: str
+
 
 class BaseCategoryUpdate(BaseModel):
     name: Optional[str] = None

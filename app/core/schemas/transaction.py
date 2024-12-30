@@ -17,6 +17,7 @@ class BaseTransaction(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
 class BaseTransactionCreate(BaseModel):
     amount: float
     description: Optional[str] = None
@@ -24,6 +25,7 @@ class BaseTransactionCreate(BaseModel):
     transaction_type: TransactionType
     category_id: Optional[int] = None
     user_id: UserIdType
+
 
 class BaseTransactionUpdate(BaseModel):
     amount: Optional[float] = None

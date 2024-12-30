@@ -14,14 +14,20 @@ from core.models.transaction import Transaction, TransactionType
 class ReportService:
     @staticmethod
     async def generate_report_graphs(
-            db: AsyncSession,
-            user_id: int,
-            start_date: Optional[date] = None,
-            end_date: Optional[date] = None,
+        db: AsyncSession,
+        user_id: int,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
     ) -> dict:
-        category_data = await ReportService._get_expense_by_category(db, user_id, start_date, end_date)
-        time_data = await ReportService._get_expense_by_time(db, user_id, start_date, end_date)
-        heatmap_data = await ReportService._get_expense_heatmap(db, user_id, start_date, end_date)
+        category_data = await ReportService._get_expense_by_category(
+            db, user_id, start_date, end_date
+        )
+        time_data = await ReportService._get_expense_by_time(
+            db, user_id, start_date, end_date
+        )
+        heatmap_data = await ReportService._get_expense_heatmap(
+            db, user_id, start_date, end_date
+        )
 
         pie_chart = ReportService._generate_pie_chart(category_data)
         line_chart = ReportService._generate_line_chart(time_data)
@@ -29,7 +35,9 @@ class ReportService:
         heatmap = ReportService._generate_heatmap(heatmap_data)
 
         pie_chart_path = ReportService._save_chart_locally(pie_chart, "pie_chart.png")
-        line_chart_path = ReportService._save_chart_locally(line_chart, "line_chart.png")
+        line_chart_path = ReportService._save_chart_locally(
+            line_chart, "line_chart.png"
+        )
         bar_chart_path = ReportService._save_chart_locally(bar_chart, "bar_chart.png")
         heatmap_path = ReportService._save_chart_locally(heatmap, "heatmap.png")
 
@@ -42,12 +50,14 @@ class ReportService:
 
     @staticmethod
     async def _get_expense_by_category(db, user_id, start_date, end_date):
-        query = select(
-            Transaction.category_id, func.sum(Transaction.amount)
-        ).where(
-            Transaction.user_id == user_id,
-            Transaction.transaction_type == TransactionType.EXPENSE
-        ).group_by(Transaction.category_id)
+        query = (
+            select(Transaction.category_id, func.sum(Transaction.amount))
+            .where(
+                Transaction.user_id == user_id,
+                Transaction.transaction_type == TransactionType.EXPENSE,
+            )
+            .group_by(Transaction.category_id)
+        )
 
         if start_date:
             query = query.where(Transaction.date >= start_date)
@@ -59,25 +69,31 @@ class ReportService:
 
     @staticmethod
     async def _get_expense_by_time(db, user_id, start_date, end_date):
-        query = select(
-            Transaction.date, func.sum(Transaction.amount)
-        ).where(
-            Transaction.user_id == user_id,
-            Transaction.transaction_type == TransactionType.EXPENSE
-        ).group_by(Transaction.date).order_by(Transaction.date)
+        query = (
+            select(Transaction.date, func.sum(Transaction.amount))
+            .where(
+                Transaction.user_id == user_id,
+                Transaction.transaction_type == TransactionType.EXPENSE,
+            )
+            .group_by(Transaction.date)
+            .order_by(Transaction.date)
+        )
 
         result = await db.execute(query)
         return {row[0]: row[1] for row in result}
 
     @staticmethod
     async def _get_expense_heatmap(db, user_id, start_date, end_date):
-        query = select(
-            func.date_part("day", Transaction.date),
-            func.sum(Transaction.amount)
-        ).where(
-            Transaction.user_id == user_id,
-            Transaction.transaction_type == TransactionType.EXPENSE
-        ).group_by(func.date_part("day", Transaction.date))
+        query = (
+            select(
+                func.date_part("day", Transaction.date), func.sum(Transaction.amount)
+            )
+            .where(
+                Transaction.user_id == user_id,
+                Transaction.transaction_type == TransactionType.EXPENSE,
+            )
+            .group_by(func.date_part("day", Transaction.date))
+        )
 
         if start_date:
             query = query.where(Transaction.date >= start_date)
@@ -93,8 +109,8 @@ class ReportService:
         values = list(data.values())
 
         fig, ax = plt.subplots()
-        ax.pie(values, labels=labels, autopct='%1.1f%%', startangle=90)
-        ax.axis('equal')
+        ax.pie(values, labels=labels, autopct="%1.1f%%", startangle=90)
+        ax.axis("equal")
 
         return ReportService._save_to_buffer(fig)
 
@@ -104,7 +120,7 @@ class ReportService:
         values = list(data.values())
 
         fig, ax = plt.subplots()
-        ax.plot(dates, values, marker='o')
+        ax.plot(dates, values, marker="o")
         ax.set_title("Expenses Over Time")
         ax.set_xlabel("Date")
         ax.set_ylabel("Amount")

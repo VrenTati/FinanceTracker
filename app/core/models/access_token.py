@@ -13,9 +13,12 @@ from .base import Base
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
 
+
 class AccessToken(Base, SQLAlchemyBaseAccessTokenTable[UserIdType]):
     user_id = mapped_column(
-        Integer, ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"), nullable=False
+        Integer,
+        ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"),
+        nullable=False,
     )
 
     @classmethod

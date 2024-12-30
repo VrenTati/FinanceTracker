@@ -14,46 +14,50 @@ router = APIRouter(
     prefix=settings.api.v1.categories,
 )
 
+
 @router.get("/", response_model=list[BaseCategory])
 async def get_categories(
-        user: Annotated[
-            User,
-            Depends(current_user),
-        ],
-        db: AsyncSession = Depends(db_helper.session_getter),
+    user: Annotated[
+        User,
+        Depends(current_user),
+    ],
+    db: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await CategoryService.get_categories(db)
 
+
 @router.post("/", response_model=BaseCategory)
 async def create_category(
-        user: Annotated[
-            User,
-            Depends(current_user),
-        ],
-        category: BaseCategoryCreate,
-        db: AsyncSession = Depends(db_helper.session_getter)
+    user: Annotated[
+        User,
+        Depends(current_user),
+    ],
+    category: BaseCategoryCreate,
+    db: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await CategoryService.create_category(db, category)
 
+
 @router.put("/{category_id}", response_model=BaseCategory)
 async def update_category(
-        user: Annotated[
-            User,
-            Depends(current_user),
-        ],
-        category_id: int,
-        category: BaseCategoryUpdate,
-        db: AsyncSession = Depends(db_helper.session_getter)
+    user: Annotated[
+        User,
+        Depends(current_user),
+    ],
+    category_id: int,
+    category: BaseCategoryUpdate,
+    db: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await CategoryService.update_category(db, category_id, category)
 
+
 @router.delete("/{category_id}")
 async def delete_category(
-        user: Annotated[
-            User,
-            Depends(current_user),
-        ],
-        category_id: int,
-        db: AsyncSession = Depends(db_helper.session_getter)
+    user: Annotated[
+        User,
+        Depends(current_user),
+    ],
+    category_id: int,
+    db: AsyncSession = Depends(db_helper.session_getter),
 ):
     return await CategoryService.delete_category(db, category_id)

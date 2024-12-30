@@ -8,6 +8,7 @@ from core.models.base import Base
 if TYPE_CHECKING:
     from core.models.transaction import Transaction
 
+
 class Category(Base):
     __tablename__ = "categories"
 

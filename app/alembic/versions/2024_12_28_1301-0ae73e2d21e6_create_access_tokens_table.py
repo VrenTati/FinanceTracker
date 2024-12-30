@@ -10,6 +10,7 @@ from typing import Sequence, Union
 
 import fastapi_users_db_sqlalchemy
 import sqlalchemy as sa
+
 from alembic import op
 
 # revision identifiers, used by Alembic.
@@ -17,6 +18,7 @@ revision: str = "0ae73e2d21e6"
 down_revision: Union[str, None] = "003c1d01f658"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
+
 
 def upgrade() -> None:
     op.create_table(
@@ -53,6 +55,7 @@ def upgrade() -> None:
     op.drop_index("ix_user_email", table_name="user")
     op.drop_table("user")
 
+
 def downgrade() -> None:
     op.create_table(
         "user",
@@ -69,21 +72,13 @@ def downgrade() -> None:
             autoincrement=False,
             nullable=False,
         ),
-        sa.Column(
-            "is_active", sa.BOOLEAN(), autoincrement=False, nullable=False
-        ),
-        sa.Column(
-            "is_superuser", sa.BOOLEAN(), autoincrement=False, nullable=False
-        ),
-        sa.Column(
-            "is_verified", sa.BOOLEAN(), autoincrement=False, nullable=False
-        ),
+        sa.Column("is_active", sa.BOOLEAN(), autoincrement=False, nullable=False),
+        sa.Column("is_superuser", sa.BOOLEAN(), autoincrement=False, nullable=False),
+        sa.Column("is_verified", sa.BOOLEAN(), autoincrement=False, nullable=False),
         sa.PrimaryKeyConstraint("id", name="user_pkey"),
     )
     op.create_index("ix_user_email", "user", ["email"], unique=True)
-    op.drop_index(
-        op.f("ix_access_tokens_created_at"), table_name="access_tokens"
-    )
+    op.drop_index(op.f("ix_access_tokens_created_at"), table_name="access_tokens")
     op.drop_table("access_tokens")
     op.drop_index(op.f("ix_users_email"), table_name="users")
     op.drop_table("users")

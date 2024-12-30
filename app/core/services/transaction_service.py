@@ -8,11 +8,15 @@ from core.schemas.transaction import BaseTransactionCreate, BaseTransactionUpdat
 class TransactionService:
     @staticmethod
     async def get_transactions(db: AsyncSession, user_id: int):
-        result = await db.execute(select(Transaction).where(Transaction.user_id == user_id))
+        result = await db.execute(
+            select(Transaction).where(Transaction.user_id == user_id)
+        )
         return result.scalars().all()
 
     @staticmethod
-    async def create_transaction(db: AsyncSession, transaction_data: BaseTransactionCreate, user_id: int):
+    async def create_transaction(
+        db: AsyncSession, transaction_data: BaseTransactionCreate, user_id: int
+    ):
         new_transaction = Transaction(**transaction_data.dict(), user_id=user_id)
         db.add(new_transaction)
         await db.commit()
@@ -20,8 +24,12 @@ class TransactionService:
         return new_transaction
 
     @staticmethod
-    async def update_transaction(db: AsyncSession, transaction_id: int, transaction_data: BaseTransactionUpdate,
-                                 user_id: int):
+    async def update_transaction(
+        db: AsyncSession,
+        transaction_id: int,
+        transaction_data: BaseTransactionUpdate,
+        user_id: int,
+    ):
         transaction = await db.get(Transaction, transaction_id)
         if not transaction or transaction.user_id != user_id:
             raise HTTPException(status_code=404, detail="Transaction not found")
