@@ -1,18 +1,19 @@
-"""Add UserCategory and aupdate relationships
+"""Add UserCategory
 
-Revision ID: ee3d4c87e224
+Revision ID: b77e81116879
 Revises: a02e7ef02f16
-Create Date: 2024-12-31 20:41:00.118509
+Create Date: 2024-12-31 22:45:25.453177
 
 """
 
 from typing import Sequence, Union
 
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
+
 
 # revision identifiers, used by Alembic.
-revision: str = "ee3d4c87e224"
+revision: str = "b77e81116879"
 down_revision: Union[str, None] = "a02e7ef02f16"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,6 +25,7 @@ def upgrade() -> None:
         sa.Column("user_id", sa.Integer(), nullable=False),
         sa.Column("category_id", sa.Integer(), nullable=False),
         sa.Column("custom_name", sa.String(), nullable=True),
+        sa.Column("hidden", sa.Boolean(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["category_id"],
@@ -62,6 +64,7 @@ def upgrade() -> None:
     )
     op.drop_column("transactions", "category_id")
     op.create_index(op.f("ix_users_id"), "users", ["id"], unique=False)
+    # ### end Alembic commands ###
 
 
 def downgrade() -> None:
