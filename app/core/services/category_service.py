@@ -5,6 +5,7 @@ from sqlalchemy.future import select
 from core.models.category import Category
 from core.schemas.category import BaseCategoryCreate, BaseCategoryUpdate
 
+
 class CategoryService:
     @staticmethod
     async def get_categories(db: AsyncSession):
