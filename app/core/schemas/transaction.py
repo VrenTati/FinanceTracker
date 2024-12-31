@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 from core.models.transaction import TransactionType
 from core.types.user_id import UserIdType
 
+
 class BaseTransaction(BaseModel):
     id: int
     amount: float
