@@ -5,6 +5,7 @@ __all__ = (
     "AccessToken",
     "Category",
     "Transaction",
+    "UserCategory",
 )
 
 from .access_token import AccessToken
@@ -13,3 +14,4 @@ from .category import Category
 from .db_helper import db_helper
 from .transaction import Transaction
 from .user import User
+from .user_category import UserCategory

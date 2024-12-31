@@ -4,17 +4,18 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from core.models.base import Base
+from .mixins.id_int_pk_mixin import IdIntPKMixin
 
 if TYPE_CHECKING:
-    from core.models.transaction import Transaction
+    from .user_category import UserCategory
 
 
-class Category(Base):
+class Category(Base, IdIntPKMixin):
     __tablename__ = "categories"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    default: Mapped[bool] = mapped_column(default=False, nullable=False)
 
-    transactions: Mapped[list["Transaction"]] = relationship(
-        "Transaction", back_populates="category", lazy="selectin"
+    user_categories: Mapped[list["UserCategory"]] = relationship(
+        "UserCategory", back_populates="base_category", lazy="selectin"
     )
