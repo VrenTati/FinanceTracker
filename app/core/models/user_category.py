@@ -10,6 +10,7 @@ from ..types.user_id import UserIdType
 if TYPE_CHECKING:
     from .user import User
     from .category import Category
+    from .transaction import Transaction
 
 
 class UserCategory(Base, IdIntPKMixin):
@@ -31,4 +32,7 @@ class UserCategory(Base, IdIntPKMixin):
     category: Mapped["Category"] = relationship(
         "Category",
         lazy="selectin",
+    )
+    transactions: Mapped[list["Transaction"]] = relationship(
+        "Transaction", back_populates="user_category", lazy="selectin"
     )

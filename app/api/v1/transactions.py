@@ -23,8 +23,8 @@ async def get_transactions(
         Depends(current_user),
     ],
     db: AsyncSession = Depends(db_helper.session_getter),
-    user_id: int = Depends(current_user),
 ):
+    user_id = user.id
     return await TransactionService.get_transactions(db, user_id)
 
 

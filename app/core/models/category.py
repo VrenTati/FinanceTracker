@@ -17,5 +17,5 @@ class Category(Base, IdIntPKMixin):
     default: Mapped[bool] = mapped_column(default=False, nullable=False)
 
     user_categories: Mapped[list["UserCategory"]] = relationship(
-        "UserCategory", back_populates="base_category", lazy="selectin"
+        "UserCategory", back_populates="category", lazy="selectin"
     )
