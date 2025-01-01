@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from pydantic import BaseModel
 from pydantic import PostgresDsn
@@ -48,6 +48,10 @@ class DatabaseConfig(BaseModel):
             "pk": "pk_%(table_name)s",
         }
 
+class CategoryConfig(BaseModel):
+    @property
+    def default_categories(self) -> List[str]:
+        return ["No category", "Food", "Transport", "Salary"]
 
 class AccessToken(BaseModel):
     lifetime_seconds: int = 3600
@@ -64,6 +68,7 @@ class Settings(BaseSettings):
     )
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
+    category: CategoryConfig = CategoryConfig()
     db: DatabaseConfig
     access_token: AccessToken
 
