@@ -12,12 +12,16 @@ from core.types.user_id import UserIdType
 from .mixins.id_int_pk_mixin import IdIntPKMixin
 
 if TYPE_CHECKING:
-    from core.models.transaction import Transaction
+    from .transaction import Transaction
+    from .user_category import UserCategory
 
 
 class User(Base, IdIntPKMixin, SQLAlchemyBaseUserTable[UserIdType]):
     transactions: Mapped[list["Transaction"]] = relationship(
-        "Transaction", back_populates="user"
+        "Transaction", back_populates="user", lazy="selectin"
+    )
+    user_categories: Mapped[list["UserCategory"]] = relationship(
+        "UserCategory", back_populates="user", lazy="selectin"
     )
 
     @classmethod

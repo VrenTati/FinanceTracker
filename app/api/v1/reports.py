@@ -17,7 +17,7 @@ async def get_report(
     db: AsyncSession = Depends(db_helper.session_getter),
     user: User = Depends(current_user),
 ):
-    report = await ReportService.get_report(
+    report = await ReportService.generate_report_graphs(
         db, user.id, filters.start_date, filters.end_date
     )
     return report

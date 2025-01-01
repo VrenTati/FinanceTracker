@@ -8,22 +8,33 @@ from core.models import User
 from core.models.db_helper import db_helper
 from core.schemas.category import BaseCategory, BaseCategoryCreate, BaseCategoryUpdate
 from core.services.category_service import CategoryService
-from .fastapi_users import current_user
+from .fastapi_users import current_user, current_super_user
 
 router = APIRouter(
     prefix=settings.api.v1.categories,
 )
 
 
-@router.get("/", response_model=list[BaseCategory])
+@router.get("/all", response_model=list[BaseCategory])
 async def get_categories(
+    user: Annotated[
+        User,
+        Depends(current_super_user),
+    ],
+    db: AsyncSession = Depends(db_helper.session_getter),
+):
+    return await CategoryService.get_all_categories(db)
+
+
+@router.get("/visible", response_model=list[BaseCategory])
+async def get_visible_categories(
     user: Annotated[
         User,
         Depends(current_user),
     ],
     db: AsyncSession = Depends(db_helper.session_getter),
 ):
-    return await CategoryService.get_categories(db)
+    return await CategoryService.get_visible_categories(db, user.id)
 
 
 @router.post("/", response_model=BaseCategory)
@@ -55,7 +66,7 @@ async def update_category(
 async def delete_category(
     user: Annotated[
         User,
-        Depends(current_user),
+        Depends(current_super_user),
     ],
     category_id: int,
     db: AsyncSession = Depends(db_helper.session_getter),

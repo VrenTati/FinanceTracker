@@ -1,7 +1,8 @@
+from typing import Dict, List
+
 from pydantic import BaseModel
 from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
 
 class RunConfig(BaseModel):
     host: str = "localhost"
@@ -15,6 +16,7 @@ class ApiV1Prefix(BaseModel):
     categories: str = "/categories"
     transactions: str = "/transactions"
     reports: str = "/reports"
+    user_categories: str = "/user_categories"
 
 
 class ApiPrefix(BaseModel):
@@ -37,6 +39,20 @@ class DatabaseConfig(BaseModel):
     max_overflow: int = 50
     pool_size: int = 10
 
+    @property
+    def convention(self) -> Dict[str, str]:
+        return {
+            "ix": "ix_%(column_0_label)s",
+            "uq": "uq_%(table_name)s_%(column_0_name)s",
+            "ck": "ck_%(table_name)s_%(constraint_name)s",
+            "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+            "pk": "pk_%(table_name)s",
+        }
+
+class CategoryConfig(BaseModel):
+    @property
+    def default_categories(self) -> List[str]:
+        return ["No category", "Food", "Transport", "Salary"]
 
 class AccessToken(BaseModel):
     lifetime_seconds: int = 3600
@@ -53,6 +69,7 @@ class Settings(BaseSettings):
     )
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
+    category: CategoryConfig = CategoryConfig()
     db: DatabaseConfig
     access_token: AccessToken
 
