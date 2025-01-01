@@ -66,7 +66,7 @@ async def update_category(
 async def delete_category(
     user: Annotated[
         User,
-        Depends(current_user),
+        Depends(current_super_user),
     ],
     category_id: int,
     db: AsyncSession = Depends(db_helper.session_getter),
