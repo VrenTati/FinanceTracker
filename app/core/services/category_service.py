@@ -2,14 +2,24 @@ from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
+from core.models import UserCategory
 from core.models.category import Category
 from core.schemas.category import BaseCategoryCreate, BaseCategoryUpdate
-
+from core.types.user_id import UserIdType
 
 class CategoryService:
     @staticmethod
-    async def get_categories(db: AsyncSession):
+    async def get_all_categories(db: AsyncSession):
         result = await db.execute(select(Category))
+        return result.scalars().all()
+
+    @staticmethod
+    async def get_visible_categories(db: AsyncSession, user_id: UserIdType):
+        result = await db.execute(
+            select(UserCategory)
+            .join(Category)
+            .where(UserCategory.user_id == user_id, UserCategory.hidden == False)
+        )
         return result.scalars().all()
 
     @staticmethod
