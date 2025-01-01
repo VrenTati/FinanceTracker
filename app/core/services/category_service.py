@@ -1,11 +1,13 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import update
 
-from core.models import UserCategory
+from core.models import UserCategory, Transaction
 from core.models.category import Category
 from core.schemas.category import BaseCategoryCreate, BaseCategoryUpdate
 from core.types.user_id import UserIdType
+
 
 class CategoryService:
     @staticmethod
@@ -56,3 +58,44 @@ class CategoryService:
         await db.delete(category)
         await db.commit()
         return {"detail": "Category deleted"}
+
+    @staticmethod
+    async def get_default_category(
+        db: AsyncSession, user_id: UserIdType
+    ) -> UserCategory:
+        default_category = await db.execute(
+            select(UserCategory)
+            .join(Category)
+            .where(UserCategory.user_id == user_id, Category.name == "No category")
+        )
+        return default_category.scalar_one_or_none()
+
+    # TODO: Refactor in separate user_category service?
+    @staticmethod
+    async def delete_user_category(db: AsyncSession, user_category_id: int) -> None:
+        user_category = await db.execute(
+            select(UserCategory).where(UserCategory.id == user_category_id)
+        )
+        user_category = user_category.scalar_one_or_none()
+
+        if not user_category:
+            raise HTTPException(status_code=404, detail="Category not found")
+
+        user_category.hidden = True
+
+        default_category = await CategoryService.get_default_category(
+            db, user_category.user_id
+        )
+        if not default_category:
+            raise HTTPException(status_code=404, detail="Default category not found")
+
+        await db.execute(
+            update(Transaction)
+            .where(
+                Transaction.user_id == user_category.user_id,
+                Transaction.user_category_id == user_category.category_id,
+            )
+            .values(category_id=default_category.category_id)
+        )
+
+        await db.commit()
